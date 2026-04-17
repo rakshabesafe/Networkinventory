@@ -2,7 +2,9 @@ package models
 
 import "time"
 
-// Resource represents a TMF 639 Resource entity
+// Resource represents a TMF 639 Resource entity.
+// It holds the attributes that define a physical or logical resource
+// in the network, tracking its lifecycle, operational status, and usage.
 type Resource struct {
 	ID                  string    `json:"id"`
 	Href                string    `json:"href,omitempty"`

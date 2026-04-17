@@ -16,6 +16,7 @@ import (
 
 var neo4jDB *db.Neo4jDB
 
+// SetDB injects the Neo4j database instance into the handler context.
 func SetDB(d *db.Neo4jDB) {
 	neo4jDB = d
 }
@@ -27,6 +28,10 @@ var (
 	mockMutex sync.RWMutex
 )
 
+// CreateResourceHandler handles HTTP POST requests to create a new Resource entity.
+// It parses the JSON payload, generates an ID if missing, and persists the entity
+// to the Neo4j database using a Cypher MERGE query. If the DB is unavailable,
+// it falls back to an in-memory thread-safe map.
 func CreateResourceHandler(w http.ResponseWriter, r *http.Request) {
 	var resource models.Resource
 	if err := json.NewDecoder(r.Body).Decode(&resource); err != nil {
@@ -64,6 +69,9 @@ func CreateResourceHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resource)
 }
 
+// ListResourcesHandler handles HTTP GET requests to retrieve a list of all Resource entities.
+// It queries the Neo4j database to fetch all Resource nodes. If the DB is unavailable,
+// it returns the items stored in the in-memory fallback map.
 func ListResourcesHandler(w http.ResponseWriter, r *http.Request) {
 	var resources []models.Resource
 
@@ -101,6 +109,9 @@ func ListResourcesHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resources)
 }
 
+// GetResourceHandler handles HTTP GET requests to retrieve a specific Resource entity by its ID.
+// It extracts the ID from the URL path variables and queries the Neo4j database.
+// If the DB is unavailable, it looks up the item in the in-memory fallback map.
 func GetResourceHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]

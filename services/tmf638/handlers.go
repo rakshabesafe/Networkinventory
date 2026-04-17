@@ -16,6 +16,7 @@ import (
 
 var neo4jDB *db.Neo4jDB
 
+// SetDB injects the Neo4j database instance into the handler context.
 func SetDB(d *db.Neo4jDB) {
 	neo4jDB = d
 }
@@ -27,6 +28,10 @@ var (
 	mockMutex sync.RWMutex
 )
 
+// CreateServiceHandler handles HTTP POST requests to create a new Service entity.
+// It parses the JSON payload, generates an ID if missing, and persists the entity
+// to the Neo4j database using a Cypher MERGE query. If the DB is unavailable,
+// it falls back to an in-memory thread-safe map.
 func CreateServiceHandler(w http.ResponseWriter, r *http.Request) {
 	var service models.Service
 	if err := json.NewDecoder(r.Body).Decode(&service); err != nil {
@@ -64,6 +69,9 @@ func CreateServiceHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(service)
 }
 
+// ListServicesHandler handles HTTP GET requests to retrieve a list of all Service entities.
+// It queries the Neo4j database to fetch all Service nodes. If the DB is unavailable,
+// it returns the items stored in the in-memory fallback map.
 func ListServicesHandler(w http.ResponseWriter, r *http.Request) {
 	var services []models.Service
 
@@ -101,6 +109,9 @@ func ListServicesHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(services)
 }
 
+// GetServiceHandler handles HTTP GET requests to retrieve a specific Service entity by its ID.
+// It extracts the ID from the URL path variables and queries the Neo4j database.
+// If the DB is unavailable, it looks up the item in the in-memory fallback map.
 func GetServiceHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]

@@ -2,7 +2,9 @@ package models
 
 import "time"
 
-// Service represents a TMF 638 Service entity
+// Service represents a TMF 638 Service entity.
+// It holds the attributes that define a service in the inventory system,
+// such as its state, operational dates, and categorical information.
 type Service struct {
 	ID                  string    `json:"id"`
 	Href                string    `json:"href,omitempty"`

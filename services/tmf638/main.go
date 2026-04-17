@@ -9,6 +9,9 @@ import (
 	"inventory/pkg/db"
 )
 
+// main is the entry point for the TMF 638 Service Inventory microservice.
+// It initializes the database connection, sets up the HTTP router with TMF-compliant endpoints,
+// and starts the HTTP server.
 func main() {
 	r := mux.NewRouter()
 
